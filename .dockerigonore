@@ -1,0 +1,7 @@
+raccoon_venv
+credentials.txt
+.gitignore
+Dockerfile
+README.md
+LICENSE
+.dockerigonore
